@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,11 +12,29 @@
             margin: 50px;
             background-color: #f4f4f4;
         }
-    
+
         h1 {
             color: #333;
         }
-    
+
+        /* Agrega estos estilos para centrar la imagen en el contenedor */
+        #examplePhotos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            text-align: center;
+            padding: 10px; /* Agregado para dar un espacio uniforme alrededor de la imagen */
+        }
+
+        #examplePhotos img {
+            max-width: 100%; /* La imagen ocupará el ancho máximo del contenedor */
+            max-height: 200px; /* Ajusta la altura máxima según sea necesario */
+            border: 2px solid #ccc;
+            border-radius: 4px;
+        }
+
+
         #uploadForm {
             max-width: 400px;
             margin: 0 auto;
@@ -24,14 +43,16 @@
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-    
+
         label {
             display: block;
             margin-top: 10px;
             font-weight: bold;
         }
-    
-        select, input, button {
+
+        select,
+        input,
+        button {
             width: 100%;
             padding: 10px;
             margin-top: 5px;
@@ -40,29 +61,34 @@
             border: 1px solid #ccc;
             border-radius: 4px;
         }
-    
+
         button {
             background-color: #4caf50;
             color: #fff;
             cursor: pointer;
             transition: background-color 0.3s;
         }
-    
+
         button:hover {
             background-color: #45a049;
         }
-    
+
         #result {
             margin-top: 20px;
         }
     </style>
-    
+
 </head>
+
 <body>
-    <h1>Aplicar Marco a Foto de Perfil</h1>
-    
+    <h1>Elige tu Team</h1>
+    <!-- Agrega este div para las fotos de ejemplo -->
+    <div id="examplePhotos">
+        <img src="./Ejemplo.png" alt="Ejemplo">
+    </div>
+
     <form id="uploadForm" enctype="multipart/form-data">
-        <label for="marco">Selecciona un marco:</label>
+        <label for="marco">Usa el marco de tu team en tu foto de perfil:</label>
         <select id="marco" name="marco">
             <!-- Aquí puedes agregar opciones para los marcos -->
             <option value="natty.png">Natty</option>
@@ -75,44 +101,49 @@
         <button type="button" onclick="enviarFoto()">Aplicar Marco</button>
     </form>
 
-    <div id="result"></div>
+    <div id="result">
+        <div id="loader" style="display: none;">Cargando...</div>
+    </div>
 
     <script>
         async function enviarFoto() {
-    const form = document.getElementById('uploadForm');
-    const formData = new FormData(form);
+            const form = document.getElementById('uploadForm');
+            const formData = new FormData(form);
 
-    try {
-        const response = await fetch('https://facebookframes-3e7255a21633.herokuapp.com/elegir/marco', {
-            method: 'POST',
-            body: formData,
-        });
+            try {
+                loader.style.display = 'block';
+                const response = await fetch('https://facebookframes-3e7255a21633.herokuapp.com/elegir/marco', {
+                    method: 'POST',
+                    body: formData,
+                });
 
-        if (response.ok) {
-            const blob = await response.blob();
+                if (response.ok) {
+                    const blob = await response.blob();
 
-            // Crear un enlace para descargar la imagen
-            const downloadLink = document.createElement('a');
-            downloadLink.href = URL.createObjectURL(blob);
-            downloadLink.download = 'resultado_overlay.jpg'; // Nombre del archivo a descargar
-            downloadLink.style.display = 'none';
+                    // Crear un enlace para descargar la imagen
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = URL.createObjectURL(blob);
+                    downloadLink.download = 'resultado_overlay.jpg'; // Nombre del archivo a descargar
+                    downloadLink.style.display = 'none';
 
-            // Agregar el enlace al cuerpo del documento
-            document.body.appendChild(downloadLink);
+                    // Agregar el enlace al cuerpo del documento
+                    document.body.appendChild(downloadLink);
 
-            // Simular un clic en el enlace para iniciar la descarga
-            downloadLink.click();
+                    // Simular un clic en el enlace para iniciar la descarga
+                    downloadLink.click();
 
-            // Eliminar el enlace después de la descarga
-            document.body.removeChild(downloadLink);
-        } else {
-            console.error('Error al procesar la foto');
+                    // Eliminar el enlace después de la descarga
+                    document.body.removeChild(downloadLink);
+                } else {
+                    console.error('Error al procesar la foto');
+                }
+            } catch (error) {
+                console.error('Error de red:', error);
+            } finally {
+                loader.style.display = 'none'; // Ocultar loader después de la respuesta
+            }
         }
-    } catch (error) {
-        console.error('Error de red:', error);
-    }
-}
-
     </script>
 </body>
+
 </html>
