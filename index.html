@@ -76,6 +76,16 @@
         #result {
             margin-top: 20px;
         }
+        #votaciones {
+            background-color: #007BFF;
+            margin-top: 40px;
+        }
+
+        /* Estilos para que tenga el mismo tamaño que el botón "Aplicar Marco" */
+        #uploadForm button[type="button"],
+        #uploadForm button[type="button"]:hover {
+                width: calc(100% - 20px); /* Tamaño del 100% menos el padding (10px a cada lado) */
+        }
     </style>
 
 </head>
@@ -94,13 +104,13 @@
             <option value="natty.png">Natty</option>
             <option value="caro.png">Caro</option>
             <option value="vale.png">Vale</option>
-            <option value="yor.png">Yor</option>
         </select>
         <br>
         <label for="foto">Selecciona tu foto de perfil:</label>
         <input type="file" id="foto" name="tu_foto_del_perfil" accept="image/*" required>
         <br>
         <button type="button" onclick="enviarFoto()">Aplicar Marco</button>
+        <button id="votaciones" type="button" onclick="irAVotaciones()">Ir a Votaciones</button>
     </form>
 
     <div id="result">
@@ -153,6 +163,9 @@
                 loader.style.display = 'none'; // Ocultar loader después de la respuesta
             }
         }
+        function irAVotaciones() {
+        window.location.href = 'votos.html';
+    }
     </script>
 </body>
 
