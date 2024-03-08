@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Votación de Equipos</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+
+        h1 {
+            color: #3498db;
+        }
+
+        #voteForm {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        fieldset {
+            border: 2px solid #3498db;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+
+        legend {
+            color: #3498db;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        #teamsList {
+            text-align: left;
+            margin-bottom: 10px;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 5px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Votación de Equipos</h1>
+
+    <form id="voteForm">
+        <fieldset>
+            <legend>Equipos</legend>
+
+            <div id="teamsList"></div>
+
+            <button type="button" onclick="vote()">Votar</button>
+        </fieldset>
+    </form>
+
+    <script>
+        async function loadTeams() {
+            try {
+                const response = await fetch("http://127.0.0.1:8000/teams/");
+                const teams = await response.json();
+
+                const teamsListDiv = document.getElementById('teamsList');
+
+                teams.forEach((team) => {
+                    const teamDiv = document.createElement('div');
+                    teamDiv.innerHTML = `
+                        <input type="checkbox" id="${team.name}" name="team" value="${team.name}">
+                        <label for="${team.name}">
+                            <img src="${team.photo}" alt="${team.name}" width="100" height="100">
+                            ${team.name} - Votos: ${team.votes}
+                        </label>
+                    `;
+                    teamsListDiv.appendChild(teamDiv);
+                });
+            } catch (error) {
+                console.error('Error al cargar la lista de equipos:', error);
+            }
+        }
+
+        async function vote() {
+            const selectedTeam = document.querySelector('input[name="team"]:checked');
+
+            if (selectedTeam) {
+                const teamName = selectedTeam.value;
+
+                try {
+                    const response = await fetch(`http://127.0.0.1:8000/teams/vote/${teamName}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ "votes": 1 }),
+                    });
+
+                    if (response.ok) {
+                        alert(`Voto exitoso para el equipo ${teamName}`);
+                        // Deshabilitar la parte para votar después de votar con éxito
+                        document.getElementById('voteForm').innerHTML = '<p>Gracias por votar.</p>';
+                    } else {
+                        const data = await response.json();
+                        alert(`Error: ${data.detail}`);
+                    }
+                } catch (error) {
+                    console.error('Error al realizar la solicitud de voto:', error);
+                }
+            } else {
+                alert('Por favor, selecciona un equipo antes de votar.');
+            }
+        }
+
+        // Cargar la lista de equipos al cargar la página
+        window.onload = loadTeams;
+    </script>
+</body>
+</html>
