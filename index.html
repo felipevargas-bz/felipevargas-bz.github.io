@@ -118,6 +118,8 @@
     <div id="result">
         <div id="loader" style="display: none;">Cargando...</div>
     </div>
+    <button onclick="consultarAPI()">Consultar API</button>
+    <div id="resultado"></div>
 
     <script>
         async function enviarFoto() {
@@ -168,6 +170,25 @@
         function irAVotaciones() {
         window.location.href = 'votos.html';
     }
+        function consultarAPI() {
+            const token = "eyJraWQiOiJlT05INTVFVXpcL3UwcGJkc2lxcHgwaFZBb3hCRXpBdFU2XC9jQlNSMWFnRm89IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiI4MTZmYTdkYi1kYTdhLTQyODktYjQ5Ny1lOGE4N2M1Y2QyZjQiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0yLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMl9RcUFMQ3hKeVoiLCJjbGllbnRfaWQiOiI1aWVpMTJwdHNzYXQ1bmNicG1lN2UyOHB1bCIsIm9yaWdpbl9qdGkiOiJhNzlkZWNmZS05ZTRkLTQ2OTQtYmMyOC03MWYxYWJiMTMzMjAiLCJldmVudF9pZCI6IjcwNDY4Mzg1LWQ1MWUtNDZlMy1iMWNjLWYzYTE1Y2FiMDAyNCIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3MTEzMzA5OTAsImV4cCI6MTcxMTMzNDU5MCwiaWF0IjoxNzExMzMwOTkwLCJqdGkiOiIwZDNlY2UwOC03NzZjLTQ2MmItOWMzNi1hZmIzMzBmMjA1ZjUiLCJ1c2VybmFtZSI6IjgxNmZhN2RiLWRhN2EtNDI4OS1iNDk3LWU4YTg3YzVjZDJmNCJ9.gpjgPJRxMbRK9Run6uKfxc2Ptpz6MOBuYDS1EQjkqHZF3FwPV7p4e5NdVANSrvBv16_NLJ87CE3_AREgMP9yjLYvhNIsTL4477_5hT68qy0H4OWviJEdwrGsKJc48JPRwR4bFjAEV5y2jQWyBEeL-oZ5wY4itez0AMDxM9fIIY7QGcPmb-2sRSaBhbWQfx2Ze94qriPIkyiG7ESjZvul-sd-4arD_WlO9Yb3G1K0vADFkwVSUbo6IgJJKca-gBEkb79A0XQL4tEDwkRVELhd9pwUs6-p9YKJ28WMAhxzWVUhGNLIqgk7V_ysCIkOgwP3pfl68ugGMuokGxrUQQAiIA";
+            const url = 'https://z0g8eqykwe.execute-api.us-east-2.amazonaws.com/default/customersCRUD?tenant=client_000001';
+
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('resultado').innerText = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('resultado').innerText = 'Error al consultar la API.';
+            });
+        }
     </script>
 </body>
 
