@@ -127,7 +127,7 @@
             method: method,
             headers: {
               'Content-Type': 'application/json',
-              // Agrega aquí cualquier otro encabezado necesario
+              'Authorization': 'Bearer eyJraWQiOiJlT05INTVFVXpcL3UwcGJkc2lxcHgwaFZBb3hCRXpBdFU2XC9jQlNSMWFnRm89IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiI4MTZmYTdkYi1kYTdhLTQyODktYjQ5Ny1lOGE4N2M1Y2QyZjQiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0yLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMl9RcUFMQ3hKeVoiLCJjbGllbnRfaWQiOiI1aWVpMTJwdHNzYXQ1bmNicG1lN2UyOHB1bCIsIm9yaWdpbl9qdGkiOiI2ODNmZmNkNS05MWY5LTQ4ZWMtYWE1ZC0yMDM2MzAyMmY5NzUiLCJldmVudF9pZCI6Ijg1NGQ3ZTdmLWM2ODQtNDRiNi05Y2U0LTFmODY2N2YwNDUxNyIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3MTE0NzM1NjcsImV4cCI6MTcxMTQ3NzE2NywiaWF0IjoxNzExNDczNTY3LCJqdGkiOiIyZmI0ZmMwMS02ZGZhLTQzNWItYWJhOC1iNjQ5OTU4YTQ2NDciLCJ1c2VybmFtZSI6IjgxNmZhN2RiLWRhN2EtNDI4OS1iNDk3LWU4YTg3YzVjZDJmNCJ9.QXnwsUQkUfcFG4afuCYXTi6qqXe1K9qdM7SofGjWmXGFt5K77a3G5rK0Uh-sPn4aYjhXc_DaBRFeCcebI1PVINZiq4FVwPGSDQ1lZG0yPJHPR61Qfbo7QGz6B9H68zI4Ja7pzLQcnT95LtK3Zjnx8y_-MMcjtHiWoWEhiZ_VoFSkUbMJi-_wBS602_ZY6wE9a_oHlrqs0Y2F9uy687FuN7uzNZliO8rtl_ZbV3g3pYnwt1UOxbX5GF-1h8aGYLts1ucaIcgvKoeeiFDkdbSadrVH9SUt7gxJ3t05INVNaAiNxU6NbkG3bmVDTd2m9l0otGh9FZg98k1jrS3BmxBdoA'
             },
             body: method !== 'GET' ? JSON.stringify(body) : null, // excluye el cuerpo si el método es GET
           };
@@ -141,12 +141,12 @@
         }
 
         function consultarAPI() {
-            const login_url = 'https://dxumqcuuqs7j52f6mmrex6vlry0xbcvl.lambda-url.us-east-2.on.aws'
+            const cus_url = 'https://dngwktzk77xsrtvdgozebg22eq0rlutj.lambda-url.us-east-2.on.aws'
             const login_body = {
                 "email": "test@test.com",
                 "password": "Ab123456789*"
             }
-            enviarSolicitud("POST", login_url, login_body)
+            enviarSolicitud("GET", cus_url, null)
                 .then(response => {
                   // Manejar la respuesta de la solicitud aquí
                   console.log('Respuesta de la solicitud:', response);
