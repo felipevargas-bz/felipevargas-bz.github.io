@@ -129,7 +129,7 @@
               'Content-Type': 'application/json',
               // Agrega aquí cualquier otro encabezado necesario
             },
-            body: method !== 'GET' ? JSON.stringify(body) : null, // excluye el cuerpo si el método es GET
+            body: method !== 'POST' ? JSON.stringify(body) : null, // excluye el cuerpo si el método es GET
           };
         
           return fetch(url, options)
