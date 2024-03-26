@@ -146,7 +146,16 @@
                 "email": "test@test.com",
                 "password": "Ab123456789*"
             }
-            const tokenjson = enviarSolicitud("POST", login_url, login_body)
+            enviarSolicitud(metodo, apiUrl, datos)
+                .then(response => {
+                  // Manejar la respuesta de la solicitud aquí
+                  console.log('Respuesta de la solicitud:', response);
+                })
+                .catch(error => {
+                  // Manejar cualquier error que ocurra durante la solicitud
+                  console.error('Error en la solicitud:', error);
+                });
+            }
             console.log(tokenjson)
         }
     </script>
