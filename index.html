@@ -93,9 +93,9 @@
 <body>
     <h1>Elige tu Team</h1>
     <!-- Agrega este div para las fotos de ejemplo -->
-    <div id="examplePhotos">
+     <!--<div id="examplePhotos">
         <img src="./Ejemplo.png" alt="Ejemplo">
-    </div>
+    </div>-->
 
     <form id="uploadForm" enctype="multipart/form-data">
         <label for="marco">Usa el marco de tu team en tu foto de perfil:</label>
@@ -122,72 +122,32 @@
     <div id="resultado"></div>
 
     <script>
-        async function enviarFoto() {
-            const form = document.getElementById('uploadForm');
-            const formData = new FormData(form);
-
-            try {
-                loader.style.display = 'block';
-                const response = await fetch('https://facebookframes-3e7255a21633.herokuapp.com/elegir/marco', {
-                    method: 'POST',
-                    body: formData,
-                });
-
-                if (response.ok) {
-                    const blob = await response.blob();
-
-                    const fechaActual = new Date();
-                    const year = fechaActual.getFullYear();
-                    const month = (fechaActual.getMonth() + 1).toString().padStart(2, '0'); // Sumar 1 porque los meses comienzan desde 0
-                    const day = fechaActual.getDate().toString().padStart(2, '0');
-                    const hours = fechaActual.getHours().toString().padStart(2, '0');
-                    const minutes = fechaActual.getMinutes().toString().padStart(2, '0');
-                    const file_name = `${year}${month}${day}_${hours}${minutes}.jpg`;
-
-                    // Crear un enlace para descargar la imagen
-                    const downloadLink = document.createElement('a');
-                    downloadLink.href = URL.createObjectURL(blob);
-                    downloadLink.download = file_name;
-                    downloadLink.style.display = 'none';
-
-                    // Agregar el enlace al cuerpo del documento
-                    document.body.appendChild(downloadLink);
-
-                    // Simular un clic en el enlace para iniciar la descarga
-                    downloadLink.click();
-
-                    // Eliminar el enlace después de la descarga
-                    document.body.removeChild(downloadLink);
-                } else {
-                    console.error('Error al procesar la foto');
-                }
-            } catch (error) {
-                console.error('Error de red:', error);
-            } finally {
-                loader.style.display = 'none'; // Ocultar loader después de la respuesta
-            }
-        }
-        function irAVotaciones() {
-        window.location.href = 'votos.html';
-    }
-        function consultarAPI() {
-            const token = "eyJraWQiOiJlT05INTVFVXpcL3UwcGJkc2lxcHgwaFZBb3hCRXpBdFU2XC9jQlNSMWFnRm89IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiI4MTZmYTdkYi1kYTdhLTQyODktYjQ5Ny1lOGE4N2M1Y2QyZjQiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0yLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMl9RcUFMQ3hKeVoiLCJjbGllbnRfaWQiOiI1aWVpMTJwdHNzYXQ1bmNicG1lN2UyOHB1bCIsIm9yaWdpbl9qdGkiOiIzZTg5OWY5My0wNTAwLTQ0ZDUtODRkYy05YzYzODM2ZWQxNWMiLCJldmVudF9pZCI6ImI5ZmQ3MjM4LWFlNDQtNGI0NC05OWU0LTk4ODEzODdhN2ZkNyIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3MTEzMzQ3NDMsImV4cCI6MTcxMTMzODM0MiwiaWF0IjoxNzExMzM0NzQzLCJqdGkiOiIyZmExMWEzYy01MmE1LTQwZmQtYjM3Yy02MTI0MmJkODVmN2IiLCJ1c2VybmFtZSI6IjgxNmZhN2RiLWRhN2EtNDI4OS1iNDk3LWU4YTg3YzVjZDJmNCJ9.bkRo-Qnbs5hTq77HOst7vY5KEpZfp-7eeJLB-58HbuEvoAIwbML4xeJhmGSUbxsvqfErZTavY8gH9semaGFI-N1qpdQ0zm2jBGJHsPVvbLCfX1Ygx15SfBBwq0AmsAqpPbOgHvdf3G79g-gMKQA9iMUyiV1oMhmjUtebE3KNboW5I2-XZ9Na0rOlXYCX4cvLof9Pysn-PohdAqyJsN5S74wscAumFdJp3sH7A1jzCd_k5nEtzcfxX5cDiuro8M8uwogqrjR1icgOPlLCmrYlOSxiTe8E7aLHPD2yle7exbgWWGRPFXP8Udl5AJqGY6ktugsPDcMD3AjrdsGFnzs6wg"
-            const url = 'https://z0g8eqykwe.execute-api.us-east-2.amazonaws.com/default/customersCRUD?tenant=client_000001';
-
-            fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            })
+        function enviarSolicitud(method, url, body) {
+          const options = {
+            method: method,
+            headers: {
+              'Content-Type': 'application/json',
+              // Agrega aquí cualquier otro encabezado necesario
+            },
+            body: method !== 'GET' ? JSON.stringify(body) : null, // excluye el cuerpo si el método es GET
+          };
+        
+          return fetch(url, options)
             .then(response => response.json())
-            .then(data => {
-                document.getElementById('resultado').innerText = JSON.stringify(data, null, 2);
-            })
             .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('resultado').innerText = 'Error al consultar la API.';
+              console.error('Error al enviar la solicitud:', error);
+              throw error;
             });
+        }
+
+        function consultarAPI() {
+            const login_url = 'https://dxumqcuuqs7j52f6mmrex6vlry0xbcvl.lambda-url.us-east-2.on.aws'
+            const login_body = {
+                "email": "test@test.com",
+                "password": "Ab123456789*"
+            }
+            const tokenjson = enviarSolicitud("GET", login_url, login_body)
+            console.log(tokenjson)
         }
     </script>
 </body>
