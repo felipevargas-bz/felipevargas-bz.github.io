@@ -129,7 +129,7 @@
               'Content-Type': 'application/json',
               // Agrega aquí cualquier otro encabezado necesario
             },
-            body: method !== 'POST' ? JSON.stringify(body) : null, // excluye el cuerpo si el método es GET
+            body: method !== 'GET' ? JSON.stringify(body) : null, // excluye el cuerpo si el método es GET
           };
         
           return fetch(url, options)
@@ -146,7 +146,7 @@
                 "email": "test@test.com",
                 "password": "Ab123456789*"
             }
-            const tokenjson = enviarSolicitud("GET", login_url, login_body)
+            const tokenjson = enviarSolicitud("POST", login_url, login_body)
             console.log(tokenjson)
         }
     </script>
