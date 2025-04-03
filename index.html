@@ -138,7 +138,7 @@
       document.getElementById("results").innerHTML = "<p>Buscando...</p>";
 
       // Request the search results from the local API
-      fetch(`http://localhost:8989/search?query=${encodeURIComponent(query)}`)
+      fetch(`https://play-my-soung-5a564ed6b57d.herokuapp.com/search?query=${encodeURIComponent(query)}`)
         .then(response => {
           if (!response.ok) {
             throw new Error("Error en la respuesta de la red");
@@ -197,7 +197,7 @@
         link: video.url
       };
 
-      fetch("http://localhost:8989/schedule", {
+      fetch("https://play-my-soung-5a564ed6b57d.herokuapp.com/schedule", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
