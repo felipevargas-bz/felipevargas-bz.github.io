@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Programador de Videos Musicales</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', sans-serif;
+    }
+    body {
+      background: #f7f9fc;
+      color: #333;
+      padding: 20px;
+      text-align: center;
+    }
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 30px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      margin-bottom: 20px;
+      font-size: 2.5em;
+      color: #5b9bd5;
+    }
+    #search-container {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #search-container input[type="text"] {
+      width: 70%;
+      padding: 12px 20px;
+      border: 2px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+    }
+    #search-container input[type="text"]:focus {
+      outline: none;
+      border-color: #5b9bd5;
+    }
+    #search-container button {
+      padding: 12px 20px;
+      font-size: 16px;
+      margin-left: 10px;
+      border: none;
+      border-radius: 4px;
+      background-color: #5b9bd5;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    #search-container button:hover {
+      background-color: #4a8ac2;
+    }
+    #results {
+      margin-top: 20px;
+    }
+    .result-card {
+      background: #fff;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: transform 0.3s;
+    }
+    .result-card:hover {
+      transform: scale(1.02);
+    }
+    .result-info {
+      text-align: left;
+    }
+    .result-info h2 {
+      font-size: 18px;
+      margin-bottom: 8px;
+      color: #5b9bd5;
+    }
+    .result-info a {
+      color: #333;
+      text-decoration: none;
+      font-size: 14px;
+    }
+    .result-info a:hover {
+      text-decoration: underline;
+    }
+    .result-card button {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 4px;
+      background-color: #28a745;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .result-card button:hover {
+      background-color: #218838;
+    }
+    .message {
+      margin-top: 15px;
+      font-size: 16px;
+      color: #d9534f;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Programador de Videos Musicales</h1>
+    <div id="search-container">
+      <input type="text" id="search-input" placeholder="Ingresa el nombre de la canción o artista..." />
+      <button id="search-button">Buscar</button>
+    </div>
+    <div id="results"></div>
+  </div>
+  
+  <script>
+    // Listen for the search button click
+    document.getElementById("search-button").addEventListener("click", function() {
+      const query = document.getElementById("search-input").value.trim();
+      if (!query) {
+        alert("Por favor ingresa un término de búsqueda.");
+        return;
+      }
+      
+      document.getElementById("results").innerHTML = "<p>Buscando...</p>";
+
+      // Request the search results from the local API
+      fetch(`http://localhost:8989/search?query=${encodeURIComponent(query)}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error("Error en la respuesta de la red");
+          }
+          return response.json();
+        })
+        .then(data => {
+          displayResults(data);
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          document.getElementById("results").innerHTML = "<p class='message'>Error al obtener los resultados.</p>";
+        });
+    });
+
+    // Function to display search results
+    function displayResults(results) {
+      const resultsDiv = document.getElementById("results");
+      resultsDiv.innerHTML = "";
+      if (results.length === 0) {
+        resultsDiv.innerHTML = "<p class='message'>No se encontraron resultados.</p>";
+        return;
+      }
+      results.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "result-card";
+
+        const infoDiv = document.createElement("div");
+        infoDiv.className = "result-info";
+        const title = document.createElement("h2");
+        title.textContent = item.title;
+        const link = document.createElement("a");
+        link.href = item.url;
+        link.target = "_blank";
+        link.textContent = item.url;
+        infoDiv.appendChild(title);
+        infoDiv.appendChild(link);
+
+        const scheduleBtn = document.createElement("button");
+        scheduleBtn.textContent = "Programar";
+        scheduleBtn.addEventListener("click", function() {
+          scheduleVideo(item);
+        });
+
+        card.appendChild(infoDiv);
+        card.appendChild(scheduleBtn);
+        resultsDiv.appendChild(card);
+      });
+    }
+
+    // Function to send the selected video to the schedule endpoint
+    function scheduleVideo(video) {
+      // Create the JSON payload with the video title and URL
+      const payload = {
+        name: video.title,
+        link: video.url
+      };
+
+      fetch("http://localhost:8989/schedule", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Error al programar el video");
+        }
+        return response.json();
+      })
+      .then(data => {
+        alert("¡Video programado exitosamente!");
+        console.log("Video programado:", data);
+      })
+      .catch(error => {
+        console.error("Error programando el video:", error);
+        alert("Error al programar el video.");
+      });
+    }
+  </script>
+</body>
+</html>
